@@ -8,6 +8,17 @@
     <packaging>maven-plugin</packaging>
     <version>1.0</version>
 
+    <url>https://github.com/zebrajaeger/opencms-maven-plugin</url>
+    <scm>
+        <url>https://github.com/zebrajaeger/opencms-maven-plugin.git</url>
+    </scm>
+    <developers>
+        <developer>
+            <name>Lars Brandt</name>
+            <email>zebrajaeger@zebrajaeger.de</email>
+        </developer>
+    </developers>
+
     <name>OpenCms Maven Plugin</name>
     <description>This plugin packages OpenCms module zips.</description>
 
