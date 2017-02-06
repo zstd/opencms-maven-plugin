@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2014 mediaworx berlin AG (http://mediaworx.com)
- *
+ * <p>
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 3 of the License, or (at your option) any later version.
- *
+ * <p>
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
+ * <p>
  * For further information about mediaworx berlin AG, please see the
  * company website: http://mediaworx.com
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  * If not, see <http://www.gnu.org/licenses/>
@@ -109,7 +109,7 @@ public class XmlHelper {
      * text noes containing whitespace only are removed.
      *
      * @param path the XML file's path
-     * @return  the parsed XML document
+     * @return the parsed XML document
      * @throws IOException  if there's a problem accessing the file
      * @throws SAXException if the file content can't be parsed
      */
@@ -124,7 +124,7 @@ public class XmlHelper {
      *
      * @param path the XML file's path
      * @param replacements Map containing replacement strings, key: string to be replaced, value: replacement string (if the map is null, no replacements are made)
-     * @return  the parsed XML document
+     * @return the parsed XML document
      * @throws IOException  if there's a problem accessing the file
      * @throws SAXException if the file content can't be parsed
      */
@@ -141,7 +141,7 @@ public class XmlHelper {
      * @param path the XML file's path
      * @param replacements Map containing replacement strings, key: string to be replaced, value: replacement string (if the map is null, no replacements are made)
      * @param encoding  the encoding to be used to parse the file (must be a valid encoding like "UTF-8")
-     * @return  the parsed XML document
+     * @return the parsed XML document
      * @throws IOException  if there's a problem accessing the file
      * @throws SAXException if the file content can't be parsed
      */
@@ -154,7 +154,7 @@ public class XmlHelper {
      * text noes containing whitespace only are removed.
      *
      * @param file the file containing the XML
-     * @return  the parsed XML document
+     * @return the parsed XML document
      * @throws IOException  if there's a problem accessing the file
      * @throws SAXException if the file content can't be parsed
      */
@@ -169,7 +169,7 @@ public class XmlHelper {
      *
      * @param file the file containing the XML
      * @param replacements Map containing replacement strings, key: string to be replaced, value: replacement string (if the map is null, no replacements are made)
-     * @return  the parsed XML document
+     * @return the parsed XML document
      * @throws IOException  if there's a problem accessing the file
      * @throws SAXException if the file content can't be parsed
      */
@@ -185,7 +185,7 @@ public class XmlHelper {
      * @param file the file containing the XML
      * @param replacements Map containing replacement strings, key: string to be replaced, value: replacement string (if the map is null, no replacements are made)
      * @param encoding  the encoding to be used to parse the file (must be a valid encoding like "UTF-8")
-     * @return  the parsed XML document
+     * @return the parsed XML document
      * @throws IOException  if there's a problem accessing the file
      * @throws SAXException if the file content can't be parsed
      */
@@ -216,7 +216,7 @@ public class XmlHelper {
         BufferedReader reader = new BufferedReader(in);
         StringBuilder fileContent = new StringBuilder();
         String line = reader.readLine();
-        while(line != null){
+        while (line != null) {
             fileContent.append(line).append('\n');
             line = reader.readLine();
         }
@@ -232,7 +232,7 @@ public class XmlHelper {
      */
     public NodeList getNodeListForXPath(Node ancestorNode, String xPath) throws XPathExpressionException {
         XPath xpath = xPathfactory.newXPath();
-        return (NodeList)xpath.evaluate(xPath, ancestorNode, XPathConstants.NODESET);
+        return (NodeList) xpath.evaluate(xPath, ancestorNode, XPathConstants.NODESET);
     }
 
     /**
@@ -245,7 +245,7 @@ public class XmlHelper {
      */
     public Node getSingleNodeForXPath(Node ancestorNode, String xPath) throws XPathExpressionException {
         XPath xpath = xPathfactory.newXPath();
-        return (Node)xpath.evaluate(xPath, ancestorNode, XPathConstants.NODE);
+        return (Node) xpath.evaluate(xPath, ancestorNode, XPathConstants.NODE);
     }
 
     /**
@@ -301,7 +301,7 @@ public class XmlHelper {
      * Converts the document to a formatted XML String (indentation level is 4) using default encoding (UTF-8).
      * @param document      The document to be converted to String
      * @param cdataElements String array containing the names of all elements that are to be added within CDATA sections
-     * @return  the String representation of the given Document
+     * @return the String representation of the given Document
      */
     public String getXmlStringFromDocument(Document document, String[] cdataElements) {
         return getXmlStringFromDocument(document, cdataElements, DEFAULT_ENCODING);
@@ -312,7 +312,7 @@ public class XmlHelper {
      * @param document      The document to be converted to String
      * @param cdataElements String array containing the names of all elements that are to be added within CDATA sections
      * @param encoding      encoding to be used (added in the XML declaration)
-     * @return  the String representation of the given Document
+     * @return the String representation of the given Document
      */
     public String getXmlStringFromDocument(Document document, String[] cdataElements, String encoding) {
         cleanEmptyTextNodes(document);
@@ -320,8 +320,7 @@ public class XmlHelper {
         Transformer transformer;
         try {
             transformer = tf.newTransformer();
-        }
-        catch (TransformerConfigurationException e) {
+        } catch (TransformerConfigurationException e) {
             LOG.error("Exception configuring the XML transformer", e);
             return "";
         }
@@ -337,15 +336,12 @@ public class XmlHelper {
         OutputStream out = new ByteArrayOutputStream();
         try {
             transformer.transform(new DOMSource(document), new StreamResult(out));
-        }
-        catch (TransformerException e) {
+        } catch (TransformerException e) {
             LOG.error("Exception transforming the XML document to String", e);
-        }
-        finally {
+        } finally {
             try {
                 out.close();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 // it seems the output stream was closed already
                 LOG.warn("Exception closing the output stream", e);
             }
@@ -361,6 +357,8 @@ public class XmlHelper {
      * to do the formatting (whitespace nodes are interfering with indentation and line breaks).
      * This method was modeled after a method by "user2401669" found on
      * <a href="http://stackoverflow.com/questions/16641835/strange-xml-indentation">StackOverflow</a>.
+     *
+     * @param parentNode the parent Node
      */
     public static void cleanEmptyTextNodes(Node parentNode) {
         boolean removeEmptyTextNodes = false;

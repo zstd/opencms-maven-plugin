@@ -56,8 +56,8 @@ import java.util.regex.Pattern;
  * Generates the manifest.xml for OpenCms modules from meta files (manifest_stub.xml and separate meta files for all
  * files and folders in the VFS). The manifest_stub.xml must contain all module specific data, structured exactly like
  * in a standard OpenCms module manifest, but the files node must be empty.
- * <br />
- * <br />
+ * <br >
+ * <br >
  * Sample manifest_stub.xml:
  * <pre>
  * &lt;export&gt;
@@ -91,13 +91,13 @@ import java.util.regex.Pattern;
  *     &lt;files/&gt;
  * &lt;/export&gt;
  * </pre>
- * <br />
+ * <br>
  * Meta-Files for VFS files must contain all the meta data for the file that is to be included in the manifest,
  * structured like a file node (type != folder) in a standard OpenCms manifest file, plus additional information about
  * the sibling count of the file, all wrapped in a fileinfo node. The file name for the meta file is equal to the VFS
  * file name with ".ocmsfile.xml" added as suffix.
- * <br />
- * <br />
+ * <br>
+ * <br>
  * Sample meta file for VFS files (test.jsp.ocmsfile.xml):
  * <pre>
  * &lt;fileinfo&gt;
@@ -153,12 +153,12 @@ import java.util.regex.Pattern;
  *     &lt;siblingcount&gt;1&lt;/siblingcount&gt;
  * &lt;/fileinfo&gt;
  * </pre>
- * <br />
+ * <br>
  * Meta-Files for VFS folders must contain all the meta data for the folder that is to be included in the manifest,
  * structured like a file node (type == folder) in a standard OpenCms manifest file. The file name for the meta file
  * is equal to the VFS folder name with ".ocmsfolder.xml" added as suffix.
- * <br />
- * <br />
+ * <br>
+ * <br>
  * Sample meta file for VFS files (formatter.ocmsfolder.xml):
  * <pre>
  * &lt;file&gt;
@@ -180,14 +180,14 @@ import java.util.regex.Pattern;
  *     &lt;accesscontrol/&gt;
  * &lt;/file&gt;
  * </pre>
- * <br />
+ * <br>
  * When putting meta files into version control, there may occur a lot of conflicts because of differing dates (and
  * UUIDs) on local development machines. To avoid conflicts manifest data can be stored with variables instead of dates
  * (and UUIDs). The manifest generator replaces these variables with generated values when a manifest is created. The
  * replacement of meta variables can be triggered separately for dates and UUIDs. We don't recommend storing UUIDs as
  * meta variables
- * <br />
- * <br />
+ * <br>
+ * <br>
  * Sample meta file for VFS files with variables instead of dates and UUIDs (formatter.ocmsfolder.xml):
  * <pre>
  * &lt;file&gt;
@@ -209,69 +209,106 @@ import java.util.regex.Pattern;
  *     &lt;accesscontrol/&gt;
  * &lt;/file&gt;
  * </pre>
- * <br />
+ * <br>
  * mediaworx provides an OpenCms module for pulling the meta files from OpenCms
- * (com.mediaworx.opencms.intellijconnector).<br />
- * <br />
+ * (com.mediaworx.opencms.intellijconnector).<br>
+ * <br>
  * Revision 1.7
  */
 public class OpenCmsModuleManifestGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(OpenCmsModuleManifestGenerator.class);
 
-    /** File name of the module manifest stub file (standard OpenCms module manifest with an empty files node) */
+    /**
+     * File name of the module manifest stub file (standard OpenCms module manifest with an empty files node)
+     */
     private static final String FILENAME_MANIFEST_STUB = "manifest_stub.xml";
 
-    /** File name for the generated module manifest */
+    /**
+     * File name for the generated module manifest
+     */
     private static final String FILENAME_MANIFEST = "manifest.xml";
 
-    /** File name suffix for VFS folder meta files */
+    /**
+     * File name suffix for VFS folder meta files
+     */
     private static final String FOLDER_META_SUFFIX = ".ocmsfolder.xml";
 
-    /** File name suffix for VFS file meta files */
+    /**
+     * File name suffix for VFS file meta files
+     */
     private static final String FILE_META_SUFFIX = ".ocmsfile.xml";
 
-    /** XPath pointing to the files node in the manifest stub file */
+    /**
+     * XPath pointing to the files node in the manifest stub file
+     */
     public static final String FILES_NODE_XPATH = "/export/files";
 
-    /** XPath pointing to the file node in VFS file meta files */
+    /**
+     * XPath pointing to the file node in VFS file meta files
+     */
     private static final String FILE_NODE_XPATH = "/fileinfo/file";
 
-    /** XPath pointing to the siblingcount node in VFS file meta files */
+    /**
+     * XPath pointing to the siblingcount node in VFS file meta files
+     */
     private static final String SIBLINGCOUNT_NODE_XPATH = "/fileinfo/siblingcount";
 
-    /** XPath pointing to the uuidresource node in VFS file meta files (used to track siblings) */
+    /**
+     * XPath pointing to the uuidresource node in VFS file meta files (used to track siblings)
+     */
     private static final String RESOURCEID_NODE_XPATH = "/fileinfo/file/uuidresource";
 
-    /** XPath pointing to the source node in VFS file meta files */
+    /**
+     * XPath pointing to the source node in VFS file meta files
+     */
     private static final String SOURCE_NODE_XPATH = "/fileinfo/file/source";
 
-    /** Array of manifest nodes using CDATA sections */
-    public static final String[] CDATA_NODES = new String[] { "nicename", "description", "authorname", "authoremail", "value" };
+    /**
+     * Array of manifest nodes using CDATA sections
+     */
+    public static final String[] CDATA_NODES = new String[]{"nicename", "description", "authorname", "authoremail", "value"};
 
-    /** Variable used as placeholder for the source path */
+    /**
+     * Variable used as placeholder for the source path
+     */
     public static final String META_VAR_SOURCE = "${source}";
 
-    /** Variable used as placeholder for the destination path */
+    /**
+     * Variable used as placeholder for the destination path
+     */
     public static final String META_VAR_DESTINATION = "${destination}";
 
-    /** Variable used as placeholder for the structure UUID */
+    /**
+     * Variable used as placeholder for the structure UUID
+     */
     public static final String META_VAR_UUIDSTRUCTURE = "${uuidstructure}";
 
-    /** Variable used as placeholder for the resource UUID */
+    /**
+     * Variable used as placeholder for the resource UUID
+     */
     public static final String META_VAR_UUIDRESOURCE = "${uuidresource}";
 
-    /** Variable used as placeholder for the resource modification date */
+    /**
+     * Variable used as placeholder for the resource modification date
+     */
     public static final String META_VAR_DATELASTMODIFIED = "${datelastmodified}";
 
-    /** Variable used as placeholder for the resource creation date */
+    /**
+     * Variable used as placeholder for the resource creation date
+     */
     public static final String META_VAR_DATECREATED = "${datecreated}";
 
-    /** Variable used as placeholder for the manifest's creation date */
+    /**
+     * Variable used as placeholder for the manifest's creation date
+     */
     public static final String META_VAR_CREATEDATE = "${createdate}";
 
-    /** The date format to use for resource creation/modification dates, this is exactly like the date format used by OpenCms */
+    /**
+     * The date format to use for resource creation/modification dates, this is exactly like the date format used by OpenCms
+     */
     private static final DateFormat RESOURCE_DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
+
     static {
         RESOURCE_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
@@ -326,7 +363,7 @@ public class OpenCmsModuleManifestGenerator {
      *                                          meta file can not be read or parsed
      * @throws OpenCmsMetaXmlFileWriteException if the resulting manifest file can not be written
      * @deprecated This method is deprecated and will be removed in a future release. Please use
-     *             {@link #generateManifest(File, String)} instead.
+     * {@link #generateManifest(File, String)} instead.
      */
     public void generateManifest(File manifestRoot) throws OpenCmsMetaXmlParseException, OpenCmsMetaXmlFileWriteException {
         generateManifest(manifestRoot, null);
@@ -335,10 +372,10 @@ public class OpenCmsModuleManifestGenerator {
     /**
      * Generates the manifest.xml for OpenCms modules from meta files (manifest_stub.xml and separate meta files for all
      * files and folders in the VFS).
-     * @param manifestRoot  file representing the root folder of the manifest meta data (including manifest_stub.xml)
-     * @param realFileRootPath  root path under which the real files (not the meta files) are stored. Used to get the
-     *                          modification date, may be null (if so the meta file's modification date is used)
      *
+     * @param manifestRoot     file representing the root folder of the manifest meta data (including manifest_stub.xml)
+     * @param realFileRootPath root path under which the real files (not the meta files) are stored. Used to get the
+     *                         modification date, may be null (if so the meta file's modification date is used)
      * @throws OpenCmsMetaXmlParseException     if the XmlHelper can not be initialized or the manifest stub file or any
      *                                          meta file can not be read or parsed
      * @throws OpenCmsMetaXmlFileWriteException if the resulting manifest file can not be written
@@ -358,24 +395,20 @@ public class OpenCmsModuleManifestGenerator {
         Document manifest;
         try {
             xmlHelper = new XmlHelper();
-            Map<String,String> replacements = null;
+            Map<String, String> replacements = null;
             if (replaceDateVariables) {
                 replacements = new HashMap<String, String>();
                 replacements.put(META_VAR_CREATEDATE, formatDate((new Date()).getTime()));
             }
             manifest = xmlHelper.parseFile(manifestStubPath, replacements);
             filesNode = xmlHelper.getSingleNodeForXPath(manifest, FILES_NODE_XPATH);
-        }
-        catch (ParserConfigurationException e) {
+        } catch (ParserConfigurationException e) {
             throw new OpenCmsMetaXmlParseException("The XmlHelper could not be initialized", e);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new OpenCmsMetaXmlParseException("The manifest stub file could not be read", e);
-        }
-        catch (SAXException e) {
+        } catch (SAXException e) {
             throw new OpenCmsMetaXmlParseException("The manifest stub xml could not be parsed (parse error)", e);
-        }
-        catch (XPathExpressionException e) {
+        } catch (XPathExpressionException e) {
             throw new OpenCmsMetaXmlParseException("The manifest stub xml could not be parsed (xpath error)", e);
         }
 
@@ -395,8 +428,7 @@ public class OpenCmsModuleManifestGenerator {
                     continue;
                 }
                 addFolderToFilesNode(filesNode, file);
-            }
-            else {
+            } else {
                 // exclude the manifest stub file and the manifest file
                 if (file.getPath().equals(manifestPath) || file.getPath().equals(manifestStubPath)) {
                     continue;
@@ -416,24 +448,25 @@ public class OpenCmsModuleManifestGenerator {
         // write the manifest to the disk
         try {
             writeManifest(manifestPath, manifestString);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new OpenCmsMetaXmlFileWriteException("manifest.xml could not be written", e);
         }
     }
 
     /**
      * Generates a random UUID
+     *
      * @return a random UUID
      */
-    private static String generateUUID()  {
+    private static String generateUUID() {
         return UUID.randomUUID().toString();
     }
 
     /**
      * Creates a String from the date that can be used as a resource date in the manifest file
+     *
      * @param millisecondsSinceEpoch the milliseconds since January 1, 1970, 00:00:00 GMT.
-     * @return  formatted date as String
+     * @return formatted date as String
      */
     private static String formatDate(long millisecondsSinceEpoch) {
         Date date = new Date(millisecondsSinceEpoch);
@@ -442,7 +475,8 @@ public class OpenCmsModuleManifestGenerator {
 
     /**
      * Replaces System file separators with a forward slash ("/") that's needed for the VFS
-     * @param path  the path containing system file separators
+     *
+     * @param path the path containing system file separators
      * @return the path with file separators replaced by "/"
      */
     private String fixVfsFileSeparator(String path) {
@@ -460,8 +494,7 @@ public class OpenCmsModuleManifestGenerator {
             File realFile = new File(realFilePath);
             if (realFile.exists()) {
                 lastModified = realFile.lastModified();
-            }
-            else {
+            } else {
                 LOG.warn(String.format("Error in file date detection: real file not found at %s, using the meta file's date", realFilePath));
             }
         }
@@ -475,6 +508,7 @@ public class OpenCmsModuleManifestGenerator {
 
     /**
      * Adds the meta information for the given folder to the given files node.
+     *
      * @param filesNode the files node the folder meta data is to be added to
      * @param folder    the folder whose meta data is to be added
      * @throws OpenCmsMetaXmlParseException if the VFS folder meta file can not be read or parsed
@@ -486,7 +520,7 @@ public class OpenCmsModuleManifestGenerator {
 
         String vfsPath = metaXmlFilePath.substring(manifestRootPath.length() + 1, metaXmlFilePath.length() - FOLDER_META_SUFFIX.length());
         vfsPath = fixVfsFileSeparator(vfsPath);
-        Map<String,String> replacements = new HashMap<String, String>();
+        Map<String, String> replacements = new HashMap<String, String>();
         replacements.put(META_VAR_DESTINATION, vfsPath);
 
         if (replaceDateVariables) {
@@ -501,11 +535,9 @@ public class OpenCmsModuleManifestGenerator {
         try {
             // append the whole content of the meta file as a child node to the files node
             xmlHelper.appendFileAsNode(filesNode, metaXmlFilePath, replacements);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new OpenCmsMetaXmlParseException("The file " + metaXmlFilePath + " could not be read", e);
-        }
-        catch (SAXException e) {
+        } catch (SAXException e) {
             throw new OpenCmsMetaXmlParseException("The xml from the file " + metaXmlFilePath + " could not be parsed", e);
         }
     }
@@ -514,6 +546,7 @@ public class OpenCmsModuleManifestGenerator {
      * Adds the meta information contained in the file node of the given xml file to the given files node. Siblings are
      * handled according to OpenCms standard (if multiple siblings are pointing to the same resource, only the first
      * gets a source node).
+     *
      * @param filesNode the files node the file meta data is to be added to
      * @param metaFile  the meta file whose meta data (contained in the file node) is to be added
      * @throws OpenCmsMetaXmlParseException if the folder meta file can not be read or parsed
@@ -534,8 +567,7 @@ public class OpenCmsModuleManifestGenerator {
                 // ... the source node is removed from the file's xml (that's how OpenCms treats siblings: only
                 // the first gets a source node), so the resource is not imported a second time during module import
                 removeSourceNodeFromFile(fileNode, metaXmlFilePath);
-            }
-            else {
+            } else {
                 handledSiblingResourceIds.add(resourceId);
             }
         }
@@ -547,7 +579,7 @@ public class OpenCmsModuleManifestGenerator {
      * Retrieves the XML Document from the VFS file meta file at the given path.
      *
      * @param metaXmlFilePath path pointing to the VFS file meta file
-     * @param metaFile the VFS file meta file
+     * @param metaFile        the VFS file meta file
      * @return the XML Document contained in the meta file
      * @throws OpenCmsMetaXmlParseException if the VFS file meta file can not be read or parsed
      */
@@ -556,7 +588,7 @@ public class OpenCmsModuleManifestGenerator {
 
         String vfsPath = metaXmlFilePath.substring(manifestRootPath.length() + 1, metaXmlFilePath.length() - FILE_META_SUFFIX.length());
         vfsPath = fixVfsFileSeparator(vfsPath);
-        Map<String,String> replacements = new HashMap<String, String>();
+        Map<String, String> replacements = new HashMap<String, String>();
         replacements.put(META_VAR_SOURCE, vfsPath);
         replacements.put(META_VAR_DESTINATION, vfsPath);
 
@@ -571,11 +603,9 @@ public class OpenCmsModuleManifestGenerator {
         }
         try {
             fileMetaInfo = xmlHelper.parseFile(metaXmlFilePath, replacements);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new OpenCmsMetaXmlParseException("The file " + metaXmlFilePath + " could not be read", e);
-        }
-        catch (SAXException e) {
+        } catch (SAXException e) {
             throw new OpenCmsMetaXmlParseException("The xml from the file " + metaXmlFilePath + " could not be parsed (parse error)", e);
         }
         return fileMetaInfo;
@@ -584,8 +614,8 @@ public class OpenCmsModuleManifestGenerator {
     /**
      * Retrieves the file node from the VFS file meta XML document (located at the XPath {@link #FILE_NODE_XPATH}).
      *
-     * @param fileMetaInfo      VFS file meta XML document
-     * @param metaXmlFilePath   path pointing to the VFS file meta file (only used for logging purposes)
+     * @param fileMetaInfo    VFS file meta XML document
+     * @param metaXmlFilePath path pointing to the VFS file meta file (only used for logging purposes)
      * @return the file node to be added to the manifest
      * @throws OpenCmsMetaXmlParseException if the file node can not be found at the expected XPath
      *                                      (see {@link #FILE_NODE_XPATH})
@@ -595,8 +625,7 @@ public class OpenCmsModuleManifestGenerator {
 
         try {
             fileNode = xmlHelper.getSingleNodeForXPath(fileMetaInfo, FILE_NODE_XPATH);
-        }
-        catch (XPathExpressionException e) {
+        } catch (XPathExpressionException e) {
             throw new OpenCmsMetaXmlParseException("The xml from the file " + metaXmlFilePath + " could not be parsed (xpath error)", e);
         }
         return fileNode;
@@ -604,8 +633,9 @@ public class OpenCmsModuleManifestGenerator {
 
     /**
      * Retrieves the number of siblings for the VFS file.
-     * @param metaInfo          VFS file meta XML document
-     * @param metaXmlFilePath   path pointing to the VFS file meta file (only used for logging purposes)
+     *
+     * @param metaInfo        VFS file meta XML document
+     * @param metaXmlFilePath path pointing to the VFS file meta file (only used for logging purposes)
      * @return the number of siblings for the VFS file
      * @throws OpenCmsMetaXmlParseException if the siblingcount node can not be found at the expected XPath
      *                                      (see {@link #SIBLINGCOUNT_NODE_XPATH})
@@ -614,11 +644,9 @@ public class OpenCmsModuleManifestGenerator {
         int numSiblings;
         try {
             numSiblings = xmlHelper.getIntValueForXpath(metaInfo, SIBLINGCOUNT_NODE_XPATH);
-        }
-        catch (XPathExpressionException e) {
+        } catch (XPathExpressionException e) {
             throw new OpenCmsMetaXmlParseException("Can't determine sibling count from " + metaXmlFilePath + " (xpath error)", e);
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             throw new OpenCmsMetaXmlParseException("Can't determine sibling count from " + metaXmlFilePath + " (not a number)", e);
         }
         return numSiblings;
@@ -626,8 +654,9 @@ public class OpenCmsModuleManifestGenerator {
 
     /**
      * Retrieves the resource Id for the VFS file.
-     * @param metaInfo          VFS file meta XML document
-     * @param metaXmlFilePath   path pointing to the VFS file meta file (only used for logging purposes)
+     *
+     * @param metaInfo        VFS file meta XML document
+     * @param metaXmlFilePath path pointing to the VFS file meta file (only used for logging purposes)
      * @return the resource Id for the VFS file
      * @throws OpenCmsMetaXmlParseException if the uuidresource node can not be found at the expected XPath
      *                                      (see {@link #RESOURCEID_NODE_XPATH})
@@ -636,8 +665,7 @@ public class OpenCmsModuleManifestGenerator {
         String resourceId;
         try {
             resourceId = xmlHelper.getStringValueForXpath(metaInfo, RESOURCEID_NODE_XPATH);
-        }
-        catch (XPathExpressionException e) {
+        } catch (XPathExpressionException e) {
             throw new OpenCmsMetaXmlParseException("Can't determine resource id from " + metaXmlFilePath + " (xpath error)", e);
         }
         return resourceId;
@@ -645,8 +673,9 @@ public class OpenCmsModuleManifestGenerator {
 
     /**
      * Removes the source node from the given file node (used for siblings).
-     * @param fileNode          the file node from which the source node is to be removed
-     * @param metaXmlFilePath   path pointing to the VFS file meta file (only used for logging purposes)
+     *
+     * @param fileNode        the file node from which the source node is to be removed
+     * @param metaXmlFilePath path pointing to the VFS file meta file (only used for logging purposes)
      * @throws OpenCmsMetaXmlParseException if the source node can not be found at the expected XPath
      *                                      (see {@link #SOURCE_NODE_XPATH})
      */
@@ -654,8 +683,7 @@ public class OpenCmsModuleManifestGenerator {
         Node sourceNode;
         try {
             sourceNode = xmlHelper.getSingleNodeForXPath(fileNode, SOURCE_NODE_XPATH);
-        }
-        catch (XPathExpressionException e) {
+        } catch (XPathExpressionException e) {
             throw new OpenCmsMetaXmlParseException("Can't remove sibling's source node from " + metaXmlFilePath + " (xpath error)", e);
         }
         sourceNode.getParentNode().removeChild(sourceNode);
@@ -663,10 +691,11 @@ public class OpenCmsModuleManifestGenerator {
 
     /**
      * Gets the path to the meta info file for the VFS file or folder at the given VFS path.
-     * @param manifestRoot  root folder of the manifest meta files
-     * @param vfsPath       VFS path of the given VFS file or folder
-     * @param isFolder      <code>true</code> if the VFS resource is a folder, <code>false</code> otherwise
-     * @return  "[vfsPath].ocmsfile.xml" for files, "[vfsPath].ocmsfolder.xml" for folders
+     *
+     * @param manifestRoot root folder of the manifest meta files
+     * @param vfsPath      VFS path of the given VFS file or folder
+     * @param isFolder     <code>true</code> if the VFS resource is a folder, <code>false</code> otherwise
+     * @return "[vfsPath].ocmsfile.xml" for files, "[vfsPath].ocmsfolder.xml" for folders
      */
     public static String getMetaInfoPath(String manifestRoot, String vfsPath, boolean isFolder) {
         return manifestRoot + vfsPath + getMetaInfoSuffix(isFolder);
@@ -674,9 +703,10 @@ public class OpenCmsModuleManifestGenerator {
 
     /**
      * Returns the suffix for the meta file depending in <code>isFolder</code>.
+     *
      * @param isFolder <code>true</code> if the suffix for folders should be returned, <code>false</code> otherwise
-     * @return  ".ocmsfolder.xml" ({@link #FOLDER_META_SUFFIX} if <code>isFolder</code> is <code>true</code>,
-     *          ".ocmsfile.xml" ({@link #FILE_META_SUFFIX} otherwise
+     * @return ".ocmsfolder.xml" ({@link #FOLDER_META_SUFFIX} if <code>isFolder</code> is <code>true</code>,
+     * ".ocmsfile.xml" ({@link #FILE_META_SUFFIX} otherwise
      */
     private static String getMetaInfoSuffix(boolean isFolder) {
         return isFolder ? FOLDER_META_SUFFIX : FILE_META_SUFFIX;
@@ -684,9 +714,10 @@ public class OpenCmsModuleManifestGenerator {
 
     /**
      * Writes the manifest file to the disk.
-     * @param manifestPath      path to the manifest file
-     * @param manifestString    String content of the manifest file
-     * @throws IOException  if writing to disk fails
+     *
+     * @param manifestPath   path to the manifest file
+     * @param manifestString String content of the manifest file
+     * @throws IOException if writing to disk fails
      */
     private void writeManifest(String manifestPath, String manifestString) throws IOException {
         FileUtils.writeStringToFile(new File(manifestPath), manifestString);
@@ -694,6 +725,7 @@ public class OpenCmsModuleManifestGenerator {
 
     /**
      * Allows to set a specific module version that is replacing the module version from the manifest stub.
+     *
      * @param moduleVersion the String to be used as the module version, if <code>null</code> or empty the version is
      *                      not changed
      */
@@ -704,6 +736,7 @@ public class OpenCmsModuleManifestGenerator {
     /**
      * Sets the flag indicating if date variables (<code>${datelastmodified}</code> and <code>${datecreated}</code>)
      * should be replaced with generated values.
+     *
      * @param replaceDateVariables <code>true</code> if date variables should be replaced, <code>false</code> otherwise
      */
     public void setReplaceDateVariables(boolean replaceDateVariables) {
@@ -725,8 +758,8 @@ public class OpenCmsModuleManifestGenerator {
      * <code>${datelastmodified}</code> and <code>${datecreated}</code>) should be replaced with generated values.
      *
      * @param replaceMetaVariables <code>true</code> if meta variables should be replaced, <code>false</code> otherwise
-     * @deprecated  Use {@link #setReplaceDateVariables(boolean)} and {@link #setReplaceIdVariables(boolean)} instead,
-     *              may be removed in future versions.
+     * @deprecated Use {@link #setReplaceDateVariables(boolean)} and {@link #setReplaceIdVariables(boolean)} instead,
+     * may be removed in future versions.
      */
     public void setReplaceMetaVariables(boolean replaceMetaVariables) {
         this.replaceDateVariables = replaceMetaVariables;

@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2014 mediaworx berlin AG (http://mediaworx.com)
- *
+ * <p>
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 3 of the License, or (at your option) any later version.
- *
+ * <p>
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
+ * <p>
  * For further information about mediaworx berlin AG, please see the
  * company website: http://mediaworx.com
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  * If not, see <http://www.gnu.org/licenses/>
@@ -31,26 +31,24 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  * Creates the exploded OpenCms module
  */
 @Mojo(name = "module-exploded",
-      defaultPhase = LifecyclePhase.PACKAGE,
-      requiresProject = true,requiresDependencyResolution = ResolutionScope.RUNTIME)
+        defaultPhase = LifecyclePhase.PACKAGE,
+        requiresProject = true, requiresDependencyResolution = ResolutionScope.RUNTIME)
 public class ModuleExplodedMojo extends AbstractOpenCmsMojo {
-  /**
-   * Creates an exploded OpenCms module in targetDir.
-   *
-   * @throws org.apache.maven.plugin.MojoExecutionException
-   *
-   * @throws org.apache.maven.plugin.MojoFailureException
-   *
-   */
-  public void execute() throws MojoExecutionException, MojoFailureException {
+    /**
+     * Creates an exploded OpenCms module in targetDir.
+     *
+     * @throws org.apache.maven.plugin.MojoExecutionException if something goes wrong
+     * @throws org.apache.maven.plugin.MojoFailureException if something goes wrong
+     */
+    public void execute() throws MojoExecutionException, MojoFailureException {
 
-    buildModule();
+        buildModule();
 
-    if (addDependencies) {
-      addDependencies();
+        if (addDependencies) {
+            addDependencies();
+        }
+
+        addManifest();
+
     }
-
-    addManifest();
-
-  }
 }

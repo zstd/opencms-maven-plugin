@@ -35,7 +35,8 @@ public class OpenCmsMetaXmlFileWriteException extends Exception {
 
     /**
      * Creates a new OpenCmsMetaXmlFileWriteException with a throwable that was causing the exception
-     * @param s description of the error
+     *
+     * @param s     description of the error
      * @param cause the root cause of the Exception
      */
     public OpenCmsMetaXmlFileWriteException(String s, Throwable cause) {
