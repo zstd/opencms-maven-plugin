@@ -529,6 +529,14 @@ public abstract class AbstractOpenCmsMojo extends AbstractMojo {
         this.moduleVersion = extractVersionNumber(version);
     }
 
+    public void setModuleDir(String moduleDir) {
+        this.moduleDir = moduleDir;
+    }
+
+    public void setTargetDir(String targetDir){
+        this.targetDir = targetDir;
+    }
+
     private String extractVersionNumber(String originalVersionNumber) {
         // check if there are non-digit letters at the end
         if (originalVersionNumber != null && originalVersionNumber.matches(".*\\D+$")) {

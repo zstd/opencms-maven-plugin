@@ -98,7 +98,7 @@ import java.util.regex.Pattern;
  * file name with ".ocmsfile.xml" added as suffix.
  * <br>
  * <br>
- * Sample meta file for VFS files (test.jsp.ocmsfile.xml):
+ * Sample meta file for VFS files (java.jsp.ocmsfile.xml):
  * <pre>
  * &lt;fileinfo&gt;
  *     &lt;file&gt;

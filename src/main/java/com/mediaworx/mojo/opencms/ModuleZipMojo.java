@@ -30,6 +30,8 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.*;
+import org.apache.maven.project.DefaultMavenProjectHelper;
+import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.project.artifact.AttachedArtifact;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
@@ -109,7 +111,7 @@ public class ModuleZipMojo extends AbstractOpenCmsMojo {
             archiver.createArchive(session, project, archive);
 
             ArtifactHandler jarHandler = artifactHandlerManager.getArtifactHandler("jar");
-            Artifact jarArtifact = new AttachedArtifact(project.getArtifact(), "jar", null, jarHandler);
+            Artifact jarArtifact = new AttachedArtifact(project.getArtifact(), "jar", "opencms", jarHandler);
             jarArtifact.setFile(jarFile);
             jarArtifact.setResolved(true);
             project.addAttachedArtifact(jarArtifact);
